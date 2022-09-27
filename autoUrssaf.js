@@ -50,10 +50,10 @@ function siretReplace(dep) {
            siret = sirets[9]
         }
         else if (domtom == 4) {
-           siret = sirets[12]
+           siret = sirets[11]
         }
         else if (domtom == 6) {
-           siret = sirets[11]
+           siret = sirets[12]
         }
     }
     /*else if (dep == 971) {
@@ -247,7 +247,7 @@ let dlName = codePostal;
 
 document.getElementById("output").innerHTML = final;
 document.getElementById("downloadlink").href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(final);
-document.getElementById("downloadlink").download = `${dlName.toLowerCase()}.txt`;
+document.getElementById("downloadlink").download = `DMD-${dlName.toLowerCase()}.txt`;
 }
 function zeeee() {
     var x = document.getElementById("input").value;
