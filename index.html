@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+    <title>Remplacement Urssaf</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="text/javascript" src="autoUrssaf.js"></script>
+    <style>
+        .txt {
+            width: 100%;
+            height: 250px;
+        }
+    </style>
+</head>
+  
+<body>
+    <textarea type="text" size="2350" id="input" class="txt" value=""></textarea><br>
+    <input type="button" name="bouton" value="Modifier" onClick="finalToShow()"><br>
+    <textarea type="text" size="2350" id="output" class="txt" value=""></textarea>
+    <a id ="downloadlink" download="edited.txt" href="data:text/plain;charset=utf-8,Erreur">Télécharger le fichier modifié</a>
+</body>
+  
+</html>
