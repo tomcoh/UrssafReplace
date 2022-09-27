@@ -1,7 +1,7 @@
 function finalToShow(){
     var fileContent = document.getElementById("input").value;
-    let sirets = ['ERREUR', 75357004300012, 78877877700011, 53513821800016, 75356054900010, 79471473300019, 75375957000017, 79512003900016, 31457202500307, 31519076900028, 31402496900029, 31463548300014, 47928171900019, 75285582500010, 78299314100038, 79507010100014, 79511834800015, 78861779300013, 75366412700010, 75391952100017, 75333448100011, 53514650000017, 75367340900011, 79448723100019, 53510475600015, 75366327700014, 75364415200013, 79484650100011];
-let codes = ['ERREUR',427,727,837,257,267,537,247,971,973,972,976,974,217,200,437,237,117,917,747,417,737,317,937,527,227,547,827];
+    let sirets = ['ERREUR', 75357004300012, 78877877700011, 53513821800016, 90209799700016, 79471473300019, 75375957000017, 79512003900016, 31457202500307, 31519076900028, 31402496900029, 31463548300014, 47928171900035, 75285582500010, 78299314100038, 79507010100014, 90209799700016, 78861779300013, 75366412700010, 75391952100017, 75333448100011, 53514650000017, 75367340900011, 79448723100019, 53510475600015, 75366327700014, 75364415200013, 79484650100011];
+let codes = ['ERREUR',427,727,837,287,267,537,247,971,973,972,976,974,217,200,437,287,117,917,747,417,737,317,937,527,227,547,827];
 
 /*const fs = require("fs");
 const buffer = fs.readFileSync("DemandeExemple.TXT");
@@ -9,6 +9,7 @@ const fileContent = buffer.toString();
 console.log(fileContent);*/
 
 let codePostal = fileContent.match(/(?<=^.{464}\n.{464}\n.{310})([0-9]{5})/)[0];
+let domtom = codePostal.match(/(?<=[0-9]{2})([0-9]{1})(?=[0-9]{2})/)[0];
 let dep = codePostal.match(/[0-9]{2}/)[0];
 console.log(dep);
 let siret ='';
@@ -38,7 +39,24 @@ function siretReplace(dep) {
     else if (dep == 18 || dep ==28 || dep == 36 || dep == 37 || dep == 41 || dep == 45) {
         siret = sirets[7]
     }
-    else if (dep == 971) {
+    else if (dep == 97) {
+        if (domtom == 1) {
+           siret = sirets[8]
+        }
+        else if (domtom == 2) {
+           siret = sirets[10]
+        }
+        else if (domtom == 3) {
+           siret = sirets[9]
+        }
+        else if (domtom == 4) {
+           siret = sirets[12]
+        }
+        else if (domtom == 6) {
+           siret = sirets[11]
+        }
+    }
+    /*else if (dep == 971) {
         siret = sirets[8]
     }
     else if (dep == 973) {
@@ -52,7 +70,7 @@ function siretReplace(dep) {
     }
     else if (dep == 974) {
         siret = sirets[12]
-    }
+    }*/
     else if (dep == 08 || dep == 10 || dep == 51 || dep == 52) {
         siret = sirets[13]
     }
@@ -130,10 +148,24 @@ function codeReplace(dep){
     else if (dep == 18 || dep ==28 || dep == 36 || dep == 37 || dep == 41 || dep == 45) {
         code = codes[7]
     }
-    else if (dep == 971) {
-        code = codes[8]
+    else if (dep == 97) {
+        if (domtom == 1) {
+            code = codes[8]
+        }
+        else if (domtom == 2) {
+            code = codes[10]
+        }
+        else if (domtom == 3) {
+            code = codes[9]
+        }
+        else if (domtom == 4) {
+            code = codes[12]
+        }
+        else if (domtom == 6) {
+            code = codes[11]
+        }
     }
-    else if (dep == 973) {
+    /*else if (dep == 973) {
         code = codes[9]
     }
     else if (dep == 972) {
@@ -144,7 +176,7 @@ function codeReplace(dep){
     }
     else if (dep == 974) {
         code = codes[12]
-    }
+    }*/
     else if (dep == 08 || dep == 10 || dep == 51 || dep == 52) {
         code = codes[13]
     }
