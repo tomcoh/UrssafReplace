@@ -1,5 +1,5 @@
-function finalToShow(){
-    var fileContent = document.getElementById("input").value;
+function finalToShow(firstLine,secondLine,thirdLine,fourthLine,fifthLine){
+    //var fileContent = document.getElementById("input").value;
     let sirets = ['ERREUR', 75357004300012, 78877877700011, 53513821800016, 90209799700016, 79471473300019, 75375957000017, 79512003900016, 31457202500307, 31519076900028, 31402496900029, 31463548300014, 47928171900035, 75285582500010, 78299314100038, 79507010100014, 90209799700016, 78861779300013, 75366412700010, 75391952100017, 75333448100011, 53514650000017, 75367340900011, 79448723100019, 53510475600015, 75366327700014, 75364415200013, 79484650100011];
 let codes = ['ERREUR',427,727,837,287,267,537,247,971,973,972,976,974,217,200,437,287,117,917,747,417,737,317,937,527,227,547,827];
 
@@ -8,13 +8,13 @@ const buffer = fs.readFileSync("DemandeExemple.TXT");
 const fileContent = buffer.toString();
 console.log(fileContent);*/
 
-let codePostal = fileContent.match(/(?<=^.{464}\n.{464}\n.{310})([0-9]{5})/)[0];
+let codePostal = thirdLine.match(/(?<=^.{310})([0-9]{5})/)[0];
 let domtom = codePostal.match(/(?<=[0-9]{2})([0-9]{1})(?=[0-9]{2})/)[0];
 let dep = codePostal.match(/[0-9]{2}/)[0];
 console.log(dep);
 let siret ='';
 let siretReplaced ='';
-let code;
+let code,tCodeReplaced,fCodeReplaced;
 let codeReplaced;
 
 function siretReplace(dep) {
@@ -119,11 +119,11 @@ function siretReplace(dep) {
     return siret;
 }
 
-function siretAdd(dep,toReplace){
+function siretAdd(dep,tToReplace,fToReplace){
     siret = siretReplace(dep);
-    siretReplaced = toReplace.replace(/(?<=^.{464}\n.{464}\n.{81})(\s{14})/, siret);
-    siretReplaced = siretReplaced.replace(/(?<=^.{464}\n.{464}\n.{464}\n.{81})(\s{14})/, siret);
-    return siretReplaced;
+    let tSiretReplaced = tToReplace.replace(/(?<=^.{81})(\s{14})/, siret);
+    let fSiretReplaced = fToReplace.replace(/(?<=^.{81})(\s{14})/, siret);
+    return [tSiretReplaced, fSiretReplaced];
 }
 
 function codeReplace(dep){
@@ -227,29 +227,63 @@ function codeReplace(dep){
 
 function codeAdd(dep){
     code = codeReplace(dep);
-    codeReplaced = fileContent.replace(/(?<=^.{464}\n.{464}\n.{95})([0-9]{3})/, code);
-    codeReplaced = codeReplaced.replace(/(?<=^.{464}\n.{464}\n.{464}\n.{95})([0-9]{3})/, code);
-    return codeReplaced;
+    tCodeReplaced = thirdLine.replace(/(?<=^.{95})([0-9]{3})/, code);
+    fCodeReplaced = fourthLine.replace(/(?<=^.{95})([0-9]{3})/, code);
+    // codeReplaced = tCodeReplaced + '\n' + fCodeReplaced;
+    // console.log('codereplaced :' + codeReplaced)
+    return [tCodeReplaced, fCodeReplaced];
 }
 
-function finalTxt(fileContent){
-    codePostal = fileContent.match(/(?<=^.{464}\n.{464}\n.{310})([0-9]{5})/)[0];
+function finalTxt(thirdLine){
+    codePostal = thirdLine.match(/(?<=^.{310})([0-9]{5})/)[0];
     depfinal = codePostal.match(/[0-9]{2}/)[0];
-    toReplace = codeAdd(depfinal);
-    final = siretAdd(depfinal,toReplace);
+    tToReplace = codeAdd(depfinal)[0];
+    fToReplace = codeAdd(depfinal)[1];
+    tFinal = siretAdd(depfinal,tToReplace,fToReplace)[0];
+    console.log('ligne3finale ' + tFinal);
+    fFinal = siretAdd(depfinal,tToReplace,fToReplace)[1];
+    console.log('ligne4finale ' + fFinal);
+    final = firstLine;
+    final += '\n' + secondLine;
+    final += '\n' + tFinal;
+    final += '\n' + fFinal;
+    final += '\n' + fifthLine;
     return final;
 }
 
-final = finalTxt(fileContent);
+final = finalTxt(thirdLine);
 let dlName = codePostal;
 
-//fs.writeFileSync('./done/ok.txt', final);
+
 
 document.getElementById("output").innerHTML = final;
 document.getElementById("downloadlink").href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(final);
 document.getElementById("downloadlink").download = `DMD-${dlName.toLowerCase()}.txt`;
 }
-function zeeee() {
-    var x = document.getElementById("input").value;
-    document.getElementById("output").innerHTML = final;
-  }
+
+// onChange (file input)
+const contentInit = function(){
+    function readFile(entireFile){
+        return new Promise((resolve, reject) => {
+          var entireFile = document.getElementById("input").files[0];
+          var fr = new FileReader();  
+          fr.onload = () => {
+            resolve(fr.result)
+          };
+          fr.onerror = reject;
+          fr.readAsText(entireFile);
+        });
+      }
+      // after file input
+    (async() => {
+        const contents = await readFile();
+        let content = contents.toString();
+        let lines = content.split('\n');
+        final = finalToShow(lines[0],lines[1],lines[2],lines[3],lines[4]);
+
+        // document.getElementById("output").innerHTML = final;
+        // document.getElementById("downloadlink").href = 'data:text/xml;charset=utf-8,' + encodeURIComponent(final);
+        // document.getElementById("downloadlink").download = 'VIR_' + gfinalDate + '.xml';
+    })();
+
+}
