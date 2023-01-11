@@ -252,13 +252,14 @@ function finalTxt(thirdLine){
 }
 
 final = finalTxt(thirdLine);
-let dlName = codePostal;
+let name = thirdLine.match(/(?<=^.{143})(.{30})/)[0].replace(/(MME)|(MR)|(MLE)|(\s)/g, '');
+let dlName = name + '-' + codePostal;
 
 
 
 document.getElementById("output").innerHTML = final;
 document.getElementById("downloadlink").href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(final);
-document.getElementById("downloadlink").download = `DMD-${dlName.toLowerCase()}.txt`;
+document.getElementById("downloadlink").download = `DMD-${dlName.toUpperCase()}.txt`;
 }
 
 // onChange (file input)
